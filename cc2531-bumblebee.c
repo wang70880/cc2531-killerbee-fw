@@ -51,7 +51,7 @@
 #include "proto.h"
 
 /* Default ZigBee channel 0 on 2.4GHz page. */
-#define CC2530_RF_CHANNEL 11
+#define CC2530_RF_CHANNEL 25
 
 /* Packet buffer size: 256 - 3 bytes (length, command, crc). */
 #define PACKET_BUFFER_SIZE  (256-3)

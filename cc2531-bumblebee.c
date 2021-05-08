@@ -176,27 +176,30 @@ PROCESS_THREAD(cc2531_rf_sniffer, ev, data)
 
   /* Init netstack */
   radio_init();
-  radio_set_channel(11);
+  radio_set_channel(25);
 
   while(1)
   {
-    if (radio_got_packet())
+    if (get_radio_sniffer_state() == SNIFFER_ON)
     {
-      pkt_size = radio_read_packet(&packet_buf[2], PACKET_BUFFER_SIZE);
-      if (pkt_size > 0)
+      if (radio_got_packet())
       {
-        /* Insert RSSI and LQI. */
-        packet_buf[0] = packetbuf_attr(PACKETBUF_ATTR_RSSI);
-        packet_buf[1] = packetbuf_attr(PACKETBUF_ATTR_LINK_QUALITY);
-
-        /* Report packet. */
-        p_pkt = (packet_t *)malloc(sizeof(packet_t));
-        if (p_pkt != NULL)
+        pkt_size = radio_read_packet(&packet_buf[2], PACKET_BUFFER_SIZE);
+        if (pkt_size > 0)
         {
-          memset(p_pkt, 0, sizeof(packet_t));
-          memcpy(p_pkt->payload, packet_buf, pkt_size+2);
-          p_pkt->size = (uint8_t)pkt_size + 2;
-          process_post(&cc2531_bumlblebee_process, event_packet_received, p_pkt);
+          /* Insert RSSI and LQI. */
+          packet_buf[0] = packetbuf_attr(PACKETBUF_ATTR_RSSI);
+          packet_buf[1] = packetbuf_attr(PACKETBUF_ATTR_LINK_QUALITY);
+
+          /* Report packet. */
+          p_pkt = (packet_t *)malloc(sizeof(packet_t));
+          if (p_pkt != NULL)
+          {
+            memset(p_pkt, 0, sizeof(packet_t));
+            memcpy(p_pkt->payload, packet_buf, pkt_size+2);
+            p_pkt->size = (uint8_t)pkt_size + 2;
+            process_post(&cc2531_bumlblebee_process, event_packet_received, p_pkt);
+          }
         }
       }
     }

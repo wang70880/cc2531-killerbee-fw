@@ -50,12 +50,17 @@ void radio_disable_sniffer(void)
   g_radio_state.sniffer_enabled = SNIFFER_OFF;
 }
 
+int get_radio_sniffer_state(void)
+{
+  return g_radio_state.sniffer_enabled;
+}
+
 int radio_send_packet(void *p_packet_buffer, int packet_length)
 {
   int ret;
 
   /* Send packet through CC2531 RF driver. */
-  return NETSTACK_RADIO.send(p_packet_buffer, packet_length);
+  while (NETSTACK_RADIO.send(p_packet_buffer, packet_length) != RADIO_TX_OK); 
 }
 
 

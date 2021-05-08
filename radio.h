@@ -30,7 +30,7 @@ int radio_send_packet(void *p_packet_buffer, int packet_length);
 int radio_got_packet(void);
 int radio_read_packet(void *p_packet_buffer, int max_packet_length);
 int radio_is_sniffer_enabled(void);
-
+int get_radio_sniffer_state(void);
 
 
 #endif /* __INC_RADIO_H */
